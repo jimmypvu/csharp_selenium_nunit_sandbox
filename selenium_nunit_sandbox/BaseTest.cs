@@ -10,6 +10,7 @@ namespace SeleniumNunitSandbox
     {
         public IWebDriver driver;
         public WebDriverWait wait;
+        public DefaultWait<IWebDriver> fluentWait;
         public IJavaScriptExecutor jse;
         public string baseUrl = "https://ecommerce-playground.lambdatest.io/";
 
@@ -34,6 +35,12 @@ namespace SeleniumNunitSandbox
             wait.Message = "Could not find element";
 
             //no fluent waits in C# selenium, just explicit WebDriverWait and DefaultWait (wdw inherits from defaultwait), you can simulate fluentWait though DefaultWait<IWebDriver>(driver)
+            fluentWait = new DefaultWait<IWebDriver>(driver);
+            fluentWait.Timeout = TimeSpan.FromSeconds(10);
+            fluentWait.PollingInterval = TimeSpan.FromMilliseconds(250);
+            fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+            fluentWait.IgnoreExceptionTypes(typeof(TimeoutException));
+            fluentWait.Message = "Element to be searched could not be found";
 
             jse = (IJavaScriptExecutor)driver;
 

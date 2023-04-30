@@ -26,10 +26,10 @@ namespace SeleniumNunitSandbox
             Console.WriteLine(pageTitle);
 
             //fluent assertion
-            pageTitle.Should().Be("Your Store", "because the page title is 'Your Store'");
-                
+            //pageTitle.Should().Be("Your Store", "because the page title is 'Your Store'");
+
             //nunit assertion
-            //Assert.That(pageTitle, Is.EqualTo("Your Store"), "Page title should be 'Your Store'");
+            Assert.That(pageTitle, Is.EqualTo("Your Store"), "Page title should be 'Your Store'");
         }
 
         [Test, Description("Verify search input is displayed")]
