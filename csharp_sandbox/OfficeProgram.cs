@@ -42,19 +42,21 @@ namespace CsharpSandbox
             if (!misterJohn.poachEmployee(michael))
             {
                 bool raiseSuccess = false;
-
+                Console.WriteLine(michael.FirstName + $" decides to ask {michael.Manager.FirstName} for a raise at {michael.Company}");
                 do
                 {
                     raiseSuccess = michael.AskForARaise();
                     askCount++;
 
-                } while (!raiseSuccess);
+                } while (!raiseSuccess && askCount < 7);
 
                 Console.WriteLine(askCount);
             }
             else
             {
-                Console.WriteLine("nice, got me a new sales team!");
+                Console.WriteLine($"{misterJohn.FirstName} nice, I got me a new sales team!");
+
+                Console.WriteLine($"{michael.FirstName}: cole world, c, c, cole world");
             };
 
 
@@ -62,11 +64,16 @@ namespace CsharpSandbox
             {
                 askCount = 0;
                 bool raiseSuccess = false;
+                Console.WriteLine($"after a few solid quarters michael decides to ask {michael.Manager.FirstName} for a raise at {michael.Company}");
                 do
                 {
                     raiseSuccess = michael.AskForARaise();
                     askCount++;
-                }while(!raiseSuccess);
+                }while(!raiseSuccess && askCount < 5);
+            }
+            else
+            {
+                Console.WriteLine($"{michael.FirstName} says to himself forget it i'm just gonna become a bank robber");
             }
 
             Console.WriteLine(askCount);

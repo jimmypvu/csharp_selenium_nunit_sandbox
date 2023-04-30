@@ -80,17 +80,16 @@ namespace CsharpSandbox
             {
                 Random rand = new Random();
                 double pitchStrength = rand.NextDouble();
-                Console.WriteLine(pitchStrength);
 
                 if (pitchStrength >= .90)
                 {
                     _salary = (int)(this.Salary * 1.15);
-                    Console.WriteLine($"nice, you got the raise! your salary is now {this.Salary}");
+                    Console.WriteLine($"nice, {this.FirstName} got the raise! your salary is now {this.Salary}");
                     return raiseSuccess = true;
                 }
                 else
                 {
-                    Console.WriteLine("sorry, no raise this time, maybe next quarter");
+                    Console.WriteLine($"sorry, no raise this time, maybe next quarter {this.FirstName}");
                     return raiseSuccess;
                 }
             }
@@ -111,7 +110,7 @@ namespace CsharpSandbox
                 Random rand = new Random();
                 double poachStrength = rand.NextDouble();
                 
-                if(poachStrength >= .9)
+                if(poachStrength >= .5)
                 {
                     employee.Company = this.Company;
                     employee.Salary = (int)(employee.Salary * 1.25);
@@ -128,7 +127,7 @@ namespace CsharpSandbox
                 }
                 else
                 {
-                    Console.WriteLine($"{employee.FirstName} says not interested, take it somewhere else!");
+                    Console.WriteLine($"{employee.FirstName} says 'not interested, take it somewhere else!' and keeps working for {employee.Company}");
                     return poachSuccess;
                 }
             }
