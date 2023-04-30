@@ -5,17 +5,19 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <StartupObject></StartupObject>
+    <StartupObject>CsharpSandbox.OfficeProgram</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Program2Class.cs" />
+    <Compile Remove="Program2TLS.cs" />
     <Compile Remove="Program3Class.cs" />
+    <Compile Remove="Program5TLS.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Program2Class.cs" />
+    <None Include="Program2TLS.cs" />
     <None Include="Program3Class.cs" />
+    <None Include="Program5TLS.cs" />
   </ItemGroup>
 
 </Project>

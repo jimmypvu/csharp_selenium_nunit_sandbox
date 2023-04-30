@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using FluentAssertions;
+using SeleniumExtras.WaitHelpers;
 
 namespace SeleniumNunitSandbox
 {   
@@ -37,7 +38,7 @@ namespace SeleniumNunitSandbox
             IWebElement searchBar = driver.FindElement(By.XPath("//div[@id='entry_217822']//input[@name='search']"));
 
 
-            searchBar.Displayed.Should().Be(true);
+            searchBar.Displayed.Should().BeTrue();
             //Assert.True(searchBar.Displayed);
         }
 
@@ -49,15 +50,21 @@ namespace SeleniumNunitSandbox
             string searchTerm = "phone";
             searchBar.SendKeys(searchTerm);
 
-            IWebElement autocompleteContainer = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("div#entry_217822 div#search div.dropdown ul[class='dropdown-menu autocomplete w-100']")));
+            IWebElement autocompleteContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div#entry_217822 div#search div.dropdown ul[class='dropdown-menu autocomplete w-100']")));
 
             Assert.True(autocompleteContainer.Displayed, "Autocomplete suggestions should be displayed if any matches for valid search term");
 
             List<IWebElement> suggestions = autocompleteContainer.FindElements(By.CssSelector("li h4")).ToList();
 
-            foreach (var item in suggestions)
+            foreach (var suggestion in suggestions)
             {
-                Assert.True(item.Text.ToLower().Contains(searchTerm), "Autocomplete suggestions should contain search term");
+                string suggestionText = suggestion.Text.ToLower();
+
+                //fluent assertion - neat
+                suggestionText.Should().Contain(searchTerm, $"Because we searched for {searchTerm}");
+
+                //nunit assertion
+                //Assert.True(suggestionText.Contains(searchTerm), "Autocomplete suggestions should contain search term");
             }
         }
 
@@ -69,12 +76,17 @@ namespace SeleniumNunitSandbox
             searchBar.SendKeys("iphone");
             searchBar.SendKeys(Keys.Enter);
 
-            List<IWebElement> searchResultPriceEles = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.CssSelector("div.product-thumb span.price-new"))).ToList();
+            List<IWebElement> searchResultPriceEles = wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.CssSelector("div.product-thumb span.price-new"))).ToList();
 
             foreach (var result in searchResultPriceEles)
             {
+                double price = Double.Parse(result.Text.Replace("$", ""));
                 //old syntax for equals within tolerance, can use Is.InRange instead
-                Assert.AreEqual(123, Double.Parse(result.Text.Replace("$", "")), .5);
+                //Assert.AreEqual(123, price, .5);
+                Assert.That(price, Is.InRange(122.5, 123.5));
+
+                //fluent assertion:
+                price.Should().BeInRange(122.5, 123.5);
             }
         }
 
@@ -85,33 +97,42 @@ namespace SeleniumNunitSandbox
 
             searchBar.SendKeys(Keys.Enter);
 
-            List<IWebElement> searchResultEles = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.CssSelector("div.product-thumb"))).ToList();
+            List<IWebElement> searchResultEles = wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.CssSelector("div.product-thumb"))).ToList();
 
             Assert.That(searchResultEles.Count, Is.EqualTo(15));
 
             ////div[@id='mz-filter-panel-0-0']//input[contains(@aria-label, 'Minimum')]
 
-            IWebElement minPriceField = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.CssSelector("div[id='mz-filter-panel-0-0'] input[placeholder='Minimum Price']")));
+            IWebElement minPriceField = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div[id='mz-filter-panel-0-0'] input[placeholder='Minimum Price']")));
 
             minPriceField.Clear();
             minPriceField.SendKeys("300");
             minPriceField.SendKeys(Keys.Enter);
 
-            IWebElement maxPriceField = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.CssSelector("div[id='mz-filter-panel-0-0'] input[placeholder='Maximum Price']")));
+            IWebElement maxPriceField = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div[id='mz-filter-panel-0-0'] input[placeholder='Maximum Price']")));
 
             maxPriceField.Clear();
             maxPriceField.SendKeys("400");
             maxPriceField.SendKeys(Keys.Enter);
 
-            Pause();
+            Pause(); //shouldn't sleep often but need to here bc unfiltered eles are already on dom before sending filter params to page, need filtered ele results to load again on dom to get correct results
 
-            List<IWebElement> filteredResultEles = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.CssSelector("div.product-thumb"))).ToList();
+            List<IWebElement> filteredResultEles = wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.CssSelector("div.product-thumb"))).ToList();
+
+            //fluent assertion:
+            //filteredResultEles.Count.Should().BeLessThanOrEqualTo(15, "because we filtered results down and 15 items in the max # of results per page");
 
             Assert.That(filteredResultEles.Count, Is.AtMost(15), "Filtered results should contain at most 15 items");
 
             foreach (var result in filteredResultEles)
             {
-                Assert.That(Double.Parse(result.FindElement(By.CssSelector("span.price-new")).Text.Replace("$", "")), Is.InRange(300, 400));
+                double price = Double.Parse(result.FindElement(By.CssSelector("span.price-new")).Text.Replace("$", ""));
+
+                //fluent assertion:
+                price.Should().BeInRange(300, 400, "because we filtered prices from 300 to 400");
+
+                //nunit assertion:
+                //Assert.That(price, Is.InRange(300, 400), "because we filtered prices from 300 to 400");
             }
         }
     }

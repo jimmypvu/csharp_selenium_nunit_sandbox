@@ -7,7 +7,7 @@ namespace CsharpSandbox
 {
     internal class Program1 : Program4Parent
     {
-        //fields belongs to class Program1, good oop review lol
+        //fields belongs to class Program1, usually will declare properties public with getters and setters and fields private but this is general idea
         string name;
         string lastName;
 
@@ -19,6 +19,8 @@ namespace CsharpSandbox
 
         //constructor with name and lastname args, but no assignment for name
         //so you need to do this.name=name OR : this(name)    <-- neat
+        // :this(name) calls the first constructor with 1 name arg, then assigns the 2nd arg to
+        //lastName field
         public Program1(string name, string lastName) : this(name)
         {
             //this.name = name;

@@ -19,18 +19,21 @@ namespace SeleniumNunitSandbox
             new WebDriverManager.DriverManager().SetUpDriver(new ChromeConfig());
 
             ChromeOptions options = new ChromeOptions();
-            options.AddArgument("--headless");
-            options.AddArgument("--window-size=1920,1080");
+            //options.AddArgument("--headless");
+            //options.AddArgument("--window-size=1920,1080");
 
             driver = new ChromeDriver(options);
-            driver.Manage().Window.Maximize();
+            driver.Manage().Window.Maximize();  //only works if not running headless, need to add window size args to chromeoptions if headless
             driver.Manage().Cookies.DeleteAllCookies();
-            //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(20);
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(20);
             Console.WriteLine(driver.Manage().Window.Size);
 
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
             wait.PollingInterval = TimeSpan.FromMilliseconds(250);
             wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+            wait.Message = "Could not find element";
+
+            //no fluent waits in C# selenium, just explicit WebDriverWait and DefaultWait (wdw inherits from defaultwait), you can simulate fluentWait though DefaultWait<IWebDriver>(driver)
 
             jse = (IJavaScriptExecutor)driver;
 
