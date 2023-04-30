@@ -1,14 +1,9 @@
-﻿using OpenQA.Selenium.Support.UI;
-using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OpenQA.Selenium;
 using FluentAssertions;
 
-namespace selenium_nunit_sandbox
-{
+namespace SeleniumNunitSandbox
+{   
+    // : in csharp is java's extends keyword for inheritance
     internal class MiscTests : BaseTest 
     {
 
@@ -29,8 +24,10 @@ namespace selenium_nunit_sandbox
 
             Console.WriteLine(pageTitle);
 
-            pageTitle.Should().Be("Your Store");
-
+            //fluent assertion
+            pageTitle.Should().Be("Your Store", "because the page title is 'Your Store'");
+                
+            //nunit assertion
             //Assert.That(pageTitle, Is.EqualTo("Your Store"), "Page title should be 'Your Store'");
         }
 
@@ -39,7 +36,9 @@ namespace selenium_nunit_sandbox
         {
             IWebElement searchBar = driver.FindElement(By.XPath("//div[@id='entry_217822']//input[@name='search']"));
 
-            Assert.True(searchBar.Displayed);
+
+            searchBar.Displayed.Should().Be(true);
+            //Assert.True(searchBar.Displayed);
         }
 
         [Test, Description("Verify search autocomplete suggestions are displayed")]

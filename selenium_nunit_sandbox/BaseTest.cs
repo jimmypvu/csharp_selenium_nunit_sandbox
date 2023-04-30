@@ -3,7 +3,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using WebDriverManager.DriverConfigs.Impl;
 
-namespace selenium_nunit_sandbox
+namespace SeleniumNunitSandbox
 {
     [TestFixture, Description("Setup and Teardown hooks")]
     public class BaseTest
