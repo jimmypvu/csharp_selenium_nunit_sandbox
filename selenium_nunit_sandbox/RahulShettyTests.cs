@@ -1,9 +1,8 @@
 ﻿using FluentAssertions;
 using OpenQA.Selenium;
-using OpenQA.Selenium.DevTools.V110.DOM;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using System.Configuration;
+using System.Collections;
 using System.Text.RegularExpressions;
 
 namespace SeleniumNunitSandbox
@@ -118,7 +117,7 @@ namespace SeleniumNunitSandbox
 
             foreach (var item in productCards)
             {
-                //when using // in xpath, it searched from the root of the dom, not from the current node and printed the first item name 4 times instead of the 4 children's item names individually, so to fix this use .// to search with that xpath from the current node or use css selector
+                //when using // in xpath, it searched from the root of the dom, not from the current node and printed the first item name 4 times instead of each the 4 children's item names individually, so to fix this use .// to search with that xpath from the current node or use a css selector
 
                 string itemTitle = item.FindElement(By.XPath(".//h4[@class='card-title']/a")).Text;
                 //string itemName = item.FindElement(By.CssSelector("h4.card-title")).Text;
@@ -145,6 +144,55 @@ namespace SeleniumNunitSandbox
             {
                 Assert.That(productsToAdd.Contains(item.Text));
             }
+        }
+
+        [Test, Description("user should be able to sort items alphabetically and by price")]
+        public void SortItemsAtoZ()
+        {
+            //get all unsorted items and save to list
+            driver.Url = "https://rahulshettyacademy.com/seleniumPractise/#/offers";
+
+            SelectElement pageSizeDropdown = new SelectElement(driver.FindElement(By.CssSelector("div select#page-menu")));
+            pageSizeDropdown.SelectByValue("20");
+
+            IList<IWebElement> unsortedEles = wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//td[1]")));
+
+            ArrayList items = new ArrayList();
+
+            foreach(var item in unsortedEles) 
+            {
+                items.Add(item.Text);
+            }
+
+            //sort items in our list
+            items.Sort();
+            TestContext.Progress.WriteLine("our sorted list: ");
+            foreach (var item in items)
+            {
+                TestContext.Progress.WriteLine(item);
+            }
+
+            //sort items on the page
+            ////th[contains(@aria-label, 'Veg/fruit name')]
+            driver.FindElement(By.CssSelector("th[aria-label *= 'fruit name']")).Click();
+
+            //save sorted items to new list
+            IList<IWebElement> sortedEles = wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.XPath("//td[1]")));
+
+            ArrayList sortedItems = new ArrayList();
+
+            foreach(var item in sortedEles)
+            {
+                sortedItems.Add(item.Text);
+            }
+
+            TestContext.Progress.WriteLine("page's sorted list: ");
+            foreach(var item in sortedItems)
+            {
+                TestContext.Progress.WriteLine(item);
+            }
+            //compare page's sorted list and our internally sorted list
+            Assert.That(sortedItems, Is.EqualTo(items));
         }
     }
 }

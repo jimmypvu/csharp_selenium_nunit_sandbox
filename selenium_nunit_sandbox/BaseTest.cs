@@ -1,6 +1,7 @@
 using FluentAssertions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using WebDriverManager.DriverConfigs.Impl;
 
@@ -12,6 +13,7 @@ namespace SeleniumNunitSandbox
         public IWebDriver driver;
         public WebDriverWait wait;
         public DefaultWait<IWebDriver> fluentWait;
+        public Actions acts;
         public IJavaScriptExecutor jse;
         public string baseUrl = "https://ecommerce-playground.lambdatest.io/";
         public string baseUrl2 = "https://rahulshettyacademy.com/loginpagePractise/";
@@ -26,7 +28,7 @@ namespace SeleniumNunitSandbox
             TestContext.Progress.WriteLine($"Setup for {testName} test");
 
             ChromeOptions options = new ChromeOptions();
-            options.AddArgument("--headless");
+            //options.AddArgument("--headless");
             options.AddArgument("--window-size=1920,1080");
 
             driver = new ChromeDriver(options);
@@ -47,6 +49,8 @@ namespace SeleniumNunitSandbox
             fluentWait.PollingInterval = TimeSpan.FromMilliseconds(250);
             fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
             fluentWait.Message = "Element to be searched could not be found";
+
+            acts = new Actions(driver);
 
             jse = (IJavaScriptExecutor)driver;
 
@@ -85,6 +89,11 @@ namespace SeleniumNunitSandbox
             } while (!pageLoadComplete);
 
             TestContext.Progress.WriteLine("Page load complete");
+        }
+
+        public void ScrollIntoView(IWebElement element)
+        {
+            jse.ExecuteScript("arguments[0].scrollIntoView()", element);
         }
 
         public void Pause()
