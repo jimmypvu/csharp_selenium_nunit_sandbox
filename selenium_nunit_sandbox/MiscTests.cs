@@ -81,12 +81,13 @@ namespace SeleniumNunitSandbox
             foreach (var result in searchResultPriceEles)
             {
                 double price = Double.Parse(result.Text.Replace("$", ""));
+
                 //old syntax for equals within tolerance, can use Is.InRange instead
                 //Assert.AreEqual(123, price, .5);
                 Assert.That(price, Is.InRange(122.5, 123.5));
 
                 //fluent assertion:
-                price.Should().BeInRange(122.5, 123.5);
+                //price.Should().BeInRange(122.5, 123.5);
             }
         }
 
@@ -115,14 +116,17 @@ namespace SeleniumNunitSandbox
             maxPriceField.SendKeys("400");
             maxPriceField.SendKeys(Keys.Enter);
 
-            Pause(); //shouldn't sleep often but need to here bc unfiltered eles are already on dom before sending filter params to page, need filtered ele results to load again on dom to get correct results
+            //Pause(); //shouldn't sleep often but may need to here bc unfiltered eles are already on dom before sending filter params to page, need filtered ele results to load again on dom to get correct results
+
+            //instead of sleeping we can wait for ele to be reloaded to go stale and then find it again after it reloads
+            wait.Until(ExpectedConditions.StalenessOf(driver.FindElements(By.CssSelector("div.product-thumb"))[0]));
 
             List<IWebElement> filteredResultEles = wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.CssSelector("div.product-thumb"))).ToList();
 
             //fluent assertion:
-            //filteredResultEles.Count.Should().BeLessThanOrEqualTo(15, "because we filtered results down and 15 items in the max # of results per page");
+            filteredResultEles.Count.Should().BeLessThanOrEqualTo(2, "because we filtered results down and 15 items in the max # of results per page");
 
-            Assert.That(filteredResultEles.Count, Is.AtMost(15), "Filtered results should contain at most 15 items");
+            //Assert.That(filteredResultEles.Count, Is.AtMost(15), "Filtered results should contain at most 15 items");
 
             foreach (var result in filteredResultEles)
             {

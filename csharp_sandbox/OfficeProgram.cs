@@ -21,6 +21,7 @@ namespace CsharpSandbox
             misterJohn.Birthday = john.Birthday;
             misterJohn.Job = john.Job;
 
+            Console.WriteLine("john decides to get a raise: ");
             misterJohn.AskForARaise();
             misterJohn.AskForARaise();
             Console.WriteLine("dammit ok! lemme put some recruiting ads up");
@@ -48,9 +49,16 @@ namespace CsharpSandbox
                     raiseSuccess = michael.AskForARaise();
                     askCount++;
 
+                    if (!raiseSuccess)
+                    {
+                        Console.WriteLine("michael waits a few weeks and asks again");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{michael.Manager.FirstName}: congrats on the good job {michael.FirstName}");
+                        Console.WriteLine("number of asks it took: " + askCount);
+                    }
                 } while (!raiseSuccess && askCount < 7);
-
-                Console.WriteLine(askCount);
             }
             else
             {
@@ -69,15 +77,22 @@ namespace CsharpSandbox
                 {
                     raiseSuccess = michael.AskForARaise();
                     askCount++;
-                }while(!raiseSuccess && askCount < 5);
+
+                    if (!raiseSuccess) 
+                    {
+                        Console.WriteLine("michael waits a few weeks and asks again");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{michael.Manager.FirstName}: congrats on the good job {michael.FirstName}");
+                        Console.WriteLine("number of asks it took: " + askCount);
+                    }
+                } while(!raiseSuccess && askCount < 5);
             }
             else
             {
                 Console.WriteLine($"{michael.FirstName} says to himself forget it i'm just gonna become a bank robber");
             }
-
-            Console.WriteLine(askCount);
-
         }
     }
 }
