@@ -32,7 +32,7 @@ namespace SeleniumNunitSandbox
             driver = new ChromeDriver(options);
             driver.Manage().Window.Maximize();  //only works if not running headless, need to add window size args to chromeoptions if headless
             driver.Manage().Cookies.DeleteAllCookies();
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             TestContext.Progress.WriteLine("Driver: " + driver);
             TestContext.Progress.WriteLine("Window size: " + driver.Manage().Window.Size);
 

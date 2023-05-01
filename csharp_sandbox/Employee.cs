@@ -89,7 +89,7 @@ namespace CsharpSandbox
                 }
                 else
                 {
-                    Console.WriteLine($"sorry, no raise this time, maybe next quarter {this.FirstName}");
+                    Console.WriteLine($"sorry no raise this time, maybe next quarter {this.FirstName}");
                     return raiseSuccess;
                 }
             }

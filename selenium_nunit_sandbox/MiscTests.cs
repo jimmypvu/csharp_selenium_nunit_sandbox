@@ -47,7 +47,8 @@ namespace SeleniumNunitSandbox
         {
             IWebElement searchBar = driver.FindElement(By.XPath("//div[@id='entry_217822']//input[@name='search']"));
 
-            string searchTerm = "phone";
+            string searchTerm = "al";
+            Console.WriteLine($"search term: '{searchTerm}'");
             searchBar.SendKeys(searchTerm);
 
             IWebElement autocompleteContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div#entry_217822 div#search div.dropdown ul[class='dropdown-menu autocomplete w-100']")));
@@ -56,10 +57,11 @@ namespace SeleniumNunitSandbox
 
             List<IWebElement> suggestions = autocompleteContainer.FindElements(By.CssSelector("li h4")).ToList();
 
+            Console.WriteLine("autocomplete suggestions: ");
             foreach (var suggestion in suggestions)
             {
                 string suggestionText = suggestion.Text.ToLower();
-
+                Console.WriteLine($"'{suggestionText}'");
                 //fluent assertion - neat
                 suggestionText.Should().Contain(searchTerm, $"Because we searched for {searchTerm}");
 
