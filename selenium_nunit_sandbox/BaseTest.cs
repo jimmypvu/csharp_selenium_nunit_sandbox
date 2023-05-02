@@ -13,7 +13,7 @@ namespace SeleniumNunitSandbox
         public IWebDriver driver;
         public WebDriverWait wait;
         public DefaultWait<IWebDriver> fluentWait;
-        public Actions acts;
+        public Actions act;
         public IJavaScriptExecutor jse;
         public string baseUrl = "https://ecommerce-playground.lambdatest.io/";
         public string baseUrl2 = "https://rahulshettyacademy.com/loginpagePractise/";
@@ -28,13 +28,13 @@ namespace SeleniumNunitSandbox
             TestContext.Progress.WriteLine($"Setup for {testName} test");
 
             ChromeOptions options = new ChromeOptions();
-            //options.AddArgument("--headless");
+            options.AddArgument("--headless");
             options.AddArgument("--window-size=1920,1080");
 
             driver = new ChromeDriver(options);
-            driver.Manage().Window.Maximize();  //only works if not running headless, need to add window size args to chromeoptions if headless
+            driver.Manage().Window.Maximize();
             driver.Manage().Cookies.DeleteAllCookies();
-            //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             TestContext.Progress.WriteLine("Driver: " + driver);
             TestContext.Progress.WriteLine("Window size: " + driver.Manage().Window.Size);
 
@@ -50,7 +50,7 @@ namespace SeleniumNunitSandbox
             fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
             fluentWait.Message = "Element to be searched could not be found";
 
-            acts = new Actions(driver);
+            act = new Actions(driver);
 
             jse = (IJavaScriptExecutor)driver;
 
